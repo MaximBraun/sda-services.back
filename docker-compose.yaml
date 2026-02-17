@@ -1,0 +1,303 @@
+# version: "3.11"
+
+# x-service-template: &service-template
+#   restart: always
+#   build:
+#     context: ./.
+#     dockerfile: ./docker/Dockerfile
+#   networks:
+#     - default
+#   volumes:
+#     - .:/code
+#   environment:
+#     - APP_PORT=${APP_PORT}
+
+# services:
+#   # FastAPI сервисы
+#   auth:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=auth
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   pixverse:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=pixverse
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   chatgpt:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=chatgpt
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   dashboard:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=dashboard
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   calories:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=calories
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   instagram:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=instagram
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   cosmetic:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=cosmetic
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   qwen:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=qwen
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+#   topmedia:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=topmedia
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+  
+#   user:
+#     <<: *service-template
+#     environment:
+#       - APP_SERVICE=user
+#     entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  # Воркеры
+  # pixverse-account-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pixverse_account
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+
+  # pixverse-template-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pixverse_template
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+
+  # pixverse-style-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pixverse_style
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+
+  # Nginx
+#   nginx:
+#     image: nginx:alpine
+#     container_name: nginx
+#     ports:
+#       - "80:80"
+#     volumes:
+#       - ./nginx/web.conf:/etc/nginx/conf.d/default.conf:ro
+#       - ${FRONTEND_DIST}:/usr/share/nginx/html:ro
+#     depends_on:
+#       - auth
+#       - pixverse
+#       - chatgpt
+#       - dashboard
+#       - calories
+#       - instagram
+#       - cosmetic
+#       - qwen
+#       - topmedia
+#       - user
+#     networks:
+#       - default
+
+# networks:
+#   default:
+#     driver: bridge
+
+
+
+version: "3.11"
+
+x-service-template: &service-template
+  restart: always
+  build:
+    context: ./.
+    dockerfile: ./docker/Dockerfile
+  networks:
+      - default
+  volumes:
+    - .:/code
+  environment:
+    - APP_PORT=${APP_PORT}
+
+services:
+  auth:
+    <<: *service-template
+    ports:
+      - 8001:${APP_PORT}
+    environment:
+      - APP_SERVICE=auth
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+  pixverse:
+    <<: *service-template
+    ports:
+      - 8002:${APP_PORT}
+    environment:
+      - APP_SERVICE=pixverse
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  chatgpt:
+    <<: *service-template
+    ports:
+      - 8003:${APP_PORT}
+    environment:
+      - APP_SERVICE=chatgpt
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+  
+  dashboard:
+    <<: *service-template
+    ports:
+      - 8004:${APP_PORT}
+    environment:
+      - APP_SERVICE=dashboard
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  calories:
+    <<: *service-template
+    ports:
+      - 8005:${APP_PORT}
+    environment:
+      - APP_SERVICE=calories
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  instagram:
+    <<: *service-template
+    ports:
+      - 8006:${APP_PORT}
+    environment:
+      - APP_SERVICE=instagram
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  cosmetic:
+    <<: *service-template
+    ports:
+      - 8007:${APP_PORT}
+    environment:
+      - APP_SERVICE=cosmetic
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  qwen:
+    <<: *service-template
+    ports:
+      - 8008:${APP_PORT}
+    environment:
+      - APP_SERVICE=qwen
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  topmedia:
+    <<: *service-template
+    ports:
+      - 8009:${APP_PORT}
+    environment:
+      - APP_SERVICE=topmedia
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+  
+  user:
+    <<: *service-template
+    ports:
+      - 8010:${APP_PORT}
+    environment:
+      - APP_SERVICE=user
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  gamestone:
+    <<: *service-template
+    ports:
+      - 8011:${APP_PORT}
+    environment:
+      - APP_SERVICE=gamestone
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  shark:
+    <<: *service-template
+    ports:
+      - 8012:${APP_PORT}
+    environment:
+      - APP_SERVICE=shark
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  
+  pika:
+    <<: *service-template
+    ports:
+      - 8013:${APP_PORT}
+    environment:
+      - APP_SERVICE=pika
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+  
+  wan:
+    <<: *service-template
+    ports:
+      - 8014:${APP_PORT}
+    environment:
+      - APP_SERVICE=wan
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+
+  cheaterbuster:
+    <<: *service-template
+    ports:
+      - 8015:${APP_PORT}
+    environment:
+      - APP_SERVICE=cheaterbuster
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+  
+  ximilar:
+    <<: *service-template
+    ports:
+      - 8016:${APP_PORT}
+    environment:
+      - APP_SERVICE=ximilar
+    entrypoint: ["sh", "./scripts/start_api.sh"]
+
+  pixverse-account-worker:
+    <<: *service-template
+    environment:
+      - TASK_APP=pixverse_account
+    entrypoint: ["sh", "./scripts/start_job.sh"] 
+
+  # pika-account-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pika_account
+  #   entrypoint: ["sh", "./scripts/start_job.sh"] 
+
+  # pixverse-template-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pixverse_template
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+
+  # pixverse-style-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=pixverse_style
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+  
+  # instagram-user-data-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=instagram_data
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]
+  
+  # instagram-tracking-worker:
+  #   <<: *service-template
+  #   environment:
+  #     - TASK_APP=instagram_tracking
+  #   entrypoint: ["sh", "./scripts/start_job.sh"]

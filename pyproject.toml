@@ -1,0 +1,56 @@
+[project]
+name = "pixverse-app"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "usvvdev",email = "usv.dev@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "fastapi (>=0.115.12,<0.116.0)",
+    "pydantic (>=2.11.4,<3.0.0)",
+    "httpx (>=0.28.1,<0.29.0)",
+    "pydantic-settings (>=2.9.1,<3.0.0)",
+    "uvicorn (>=0.34.2,<0.35.0)",
+    "python-multipart (>=0.0.20,<0.0.21)",
+    "selenium (>=4.33.0,<5.0.0)",
+    "undetected-chromedriver (>=3.5.5,<4.0.0)",
+    "pytest-shutil (>=1.8.1,<2.0.0)",
+    "selenium-wire (>=5.1.0,<6.0.0)",
+    "blinker (==1.7.0)",
+    "oss2 (>=2.19.1,<3.0.0)",
+    "pendulum (>=3.1.0,<4.0.0)",
+    "sqlalchemy (>=2.0.41,<3.0.0)",
+    "passlib (>=1.7.4,<2.0.0)",
+    "pyjwt (>=2.10.1,<3.0.0)",
+    "aiomysql (>=0.2.0,<0.3.0)",
+    "pillow (>=11.2.1,<12.0.0)",
+    "fake-useragent (>=2.2.0,<3.0.0)",
+    "celery (==5.5.3)",
+    "redis (>=6.2.0,<7.0.0)",
+    "aiogram (>=3.20.0.post0,<4.0.0)",
+    "pillow-heif (>=1.0.0,<2.0.0)",
+    "instagrapi (>=2.2.1,<3.0.0)",
+    "fastapi-pagination (>=0.13.3,<0.14.0)",
+    "instaloader (>=4.14.2,<5.0.0)",
+    "ddgs (>=9.6.0,<10.0.0)",
+    "rocketapi (>=1.0.12,<2.0.0)",
+    "srt (>=3.5.3,<4.0.0)",
+    "deep-translator (>=1.11.4,<2.0.0)",
+    "openai-whisper (>=20250625,<20250626)",
+    "playwright (>=1.55.0,<2.0.0)",
+    "edge-tts (>=7.2.3,<8.0.0)",
+    "piexif (>=1.1.3,<2.0.0)",
+    "pydub (>=0.25.1,<0.26.0)",
+    "whisper-timestamped (>=1.15.9,<2.0.0)",
+    "faster-whisper (>=1.2.1,<2.0.0)",
+    "picimagesearch (>=3.12.11,<4.0.0)",
+    "openapi (>=2.0.0,<3.0.0)",
+    "openai (>=2.15.0,<3.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
