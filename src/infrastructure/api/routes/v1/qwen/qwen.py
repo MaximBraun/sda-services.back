@@ -95,8 +95,8 @@ async def text_to_photo(
     request: Request,
     body: IT2IBody,
     # data: IQwenBody = Depends(),
-    app_id: str = Query(),
-    user_id: str = Query(),
+    app_id: str = Query(..., alias="appId"),
+    user_id: str = Query(..., alias="userId"),
     view: WanView = Depends(WanViewFactory.create),
 ) -> QwenPhotoAPIResponse:
     data = await view.text_to_image(
@@ -129,8 +129,8 @@ async def photo_to_photo(
     request: Request,
     image: UploadFile,
     body: IT2IBody,
-    app_id: str = Query(),
-    user_id: str = Query(),
+    app_id: str = Query(..., alias="appId"),
+    user_id: str = Query(..., alias="userId"),
     view: WanView = Depends(WanViewFactory.create),
 ) -> ChatGPTResp:
     data = await view.photo_to_photo(
