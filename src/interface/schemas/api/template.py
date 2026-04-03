@@ -43,11 +43,13 @@ class ITemplate(ISchema):
 
     @field_validator("name", "category", mode="before")
     @classmethod
-    def validate_app_id(
+    def normalize_whitespace(
         cls,
-        value: str,
-    ) -> str:
-        return " ".join(value.split())
+        value: str | None,
+    ) -> str | None:
+        if value is None:
+            return None
+        return " ".join(str(value).split())
 
 
 class ChangeTemplate(ITemplate):
