@@ -1,7 +1,10 @@
 # coding utf-8
 
+from typing import Annotated
+
 from fastapi import (
     APIRouter,
+    Body,
     HTTPException,
     UploadFile,
     Depends,
@@ -145,7 +148,7 @@ async def add_template(
 )
 async def update_template(
     id: int,
-    data: ITemplate,
+    data: Annotated[ITemplate, Body()],
     token_data: dict[str, int | str] = Depends(validate_token),
     view: PixverseTemplateView = Depends(PixverseTemplateViewFactory.create),
 ) -> ChangeTemplate:
