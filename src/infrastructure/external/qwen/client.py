@@ -72,7 +72,7 @@ from ....interface.schemas.external import (
     QwenResponse,
     QwenAuthResponse,
     QwenErrorResponse,
-    QwenMessageContent,
+    QwenGenerationData,
     QwenPhotoAPIResponse,
     QwenUploadData,
     ChatGPTCalories,
@@ -162,18 +162,25 @@ class QwenClient:
         )
         return account.user_id
 
-    def __get_media_content(
+    def __try_get_media_content(
         self,
         data: QwenResponse,
-    ) -> str:
-        last_generation_id: str = data.resp.current_id
+    ) -> str | None:
+        """Извлекает контент из ответа чата Qwen.
 
-        if last_generation_id is not None:
-            content_list: list[QwenMessageContent] = data.resp.chat.history.messages[
-                last_generation_id
-            ].content_list
-
-            return content_list[0].content
+        Сразу после POST генерации GET часто отдаёт укороченный `data` (только id),
+        который парсится как `QwenChatData` без `current_id` — в этом случае None.
+        """
+        resp = data.resp
+        if not isinstance(resp, QwenGenerationData):
+            return None
+        last_generation_id = resp.current_id
+        if not last_generation_id:
+            return None
+        message = resp.chat.history.messages.get(last_generation_id)
+        if message is None or not message.content_list:
+            return None
+        return message.content_list[0].content
 
     async def __handle_failure(
         self,
@@ -362,22 +369,33 @@ class QwenClient:
         self,
         token: str,
         chat_id: str,
+        max_polls: int = 120,
+        poll_interval: float = 1.0,
     ) -> str:
-        data: QwenResponse | QwenErrorResponse = await self._core.get(
-            token=token,
-            # Request **kwargs
-            endpoint=QwenEndpoint.RESULT.format(
-                chat_id=chat_id,
-            ),
-        )
-
-        if not isinstance(data, QwenResponse):
-            raise HTTPException(
-                status_code=400,
-                detail=data.detail,
+        for _ in range(max_polls):
+            data: QwenResponse | QwenErrorResponse = await self._core.get(
+                token=token,
+                # Request **kwargs
+                endpoint=QwenEndpoint.RESULT.format(
+                    chat_id=chat_id,
+                ),
             )
 
-        return self.__get_media_content(data)
+            if not isinstance(data, QwenResponse):
+                raise HTTPException(
+                    status_code=400,
+                    detail=data.detail,
+                )
+
+            content = self.__try_get_media_content(data)
+            if content is not None:
+                return content
+            await sleep(poll_interval)
+
+        raise QwenError(
+            status_code=504,
+            detail="Qwen result not ready: no generation payload after polling",
+        )
 
     def __find_images(
         self,
