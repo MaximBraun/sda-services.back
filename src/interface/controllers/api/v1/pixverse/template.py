@@ -59,7 +59,7 @@ class PixverseTemplateController:
         preview_small: str,
         preview_large: str,
         token_data: dict[str, int | str],
-    ) -> ChangeTemplate:
+    ) -> ChangeTemplate | None:
         template = await self._repository.fetch_with_filters(
             id=id,
             auth_user_id=token_data.get("aid"),
@@ -73,6 +73,7 @@ class PixverseTemplateController:
                     preview_large=preview_large,
                 ),
             )
+        return None
 
     async def delete_template(
         self,

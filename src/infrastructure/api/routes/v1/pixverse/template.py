@@ -2,6 +2,7 @@
 
 from fastapi import (
     APIRouter,
+    HTTPException,
     UploadFile,
     Depends,
 )
@@ -144,19 +145,24 @@ async def add_template(
 )
 async def update_template(
     id: int,
-    data: ITemplate = Depends(),
-    preview_small: UploadFile | None = None,
-    preview_large: UploadFile | None = None,
+    data: ITemplate,
     token_data: dict[str, int | str] = Depends(validate_token),
     view: PixverseTemplateView = Depends(PixverseTemplateViewFactory.create),
 ) -> ChangeTemplate:
-    return await view.update_template(
+    """JSON body (админка). Превью через файлы — отдельный сценарий / расширение при необходимости."""
+    result = await view.update_template(
         id,
         data,
-        save_upload_file(preview_small, subdir="video/small"),
-        save_upload_file(preview_large, subdir="video/large"),
+        None,
+        None,
         token_data,
     )
+    if result is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Шаблон не найден или нет доступа",
+        )
+    return result
 
 
 @pixverse_template_router.delete(

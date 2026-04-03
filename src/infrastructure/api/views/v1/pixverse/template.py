@@ -55,7 +55,7 @@ class PixverseTemplateView:
         preview_small: str,
         preview_large: str,
         token_data: dict[str, int | str],
-    ) -> ChangeTemplate:
+    ) -> ChangeTemplate | None:
         return await self._controller.update_template(
             id,
             data,
