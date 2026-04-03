@@ -66,7 +66,10 @@ class PixverseApplicationController:
 
             if application.templates:
                 application.templates.sort(
-                    key=lambda t: category_priority.get(t.category, len(categories))
+                    key=lambda t: (
+                        category_priority.get(t.category, len(categories)),
+                        -t.id,
+                    ),
                 )
 
         return application
