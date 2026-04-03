@@ -1,11 +1,11 @@
 # coding utf-8
 
-from typing import Annotated
+from pydantic import ValidationError
 
 from fastapi import (
     APIRouter,
-    Body,
     HTTPException,
+    Request,
     UploadFile,
     Depends,
 )
@@ -148,11 +148,23 @@ async def add_template(
 )
 async def update_template(
     id: int,
-    data: Annotated[ITemplate, Body()],
+    request: Request,
     token_data: dict[str, int | str] = Depends(validate_token),
     view: PixverseTemplateView = Depends(PixverseTemplateViewFactory.create),
 ) -> ChangeTemplate:
-    """JSON body (админка). Превью через файлы — отдельный сценарий / расширение при необходимости."""
+    """JSON body (админка). Тело читаем вручную — иначе в части окружений ITemplate
+    ошибочно разбирается как query (422 query.name: Field required)."""
+    raw = await request.body()
+    if not raw.strip():
+        raise HTTPException(
+            status_code=422,
+            detail="Тело запроса (JSON) обязательно",
+        )
+    try:
+        data = ITemplate.model_validate_json(raw)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=e.errors()) from e
+
     result = await view.update_template(
         id,
         data,
